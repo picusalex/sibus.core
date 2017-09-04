@@ -5,11 +5,11 @@ import signal
 import sys
 import time
 
-from sibus_lib import mylogger
 from sibus_lib import BusCore
+from sibus_lib import sibus_init
 
 PROGRAM_NAME = "bus.core"
-logger = mylogger(PROGRAM_NAME)
+logger, cfg_data = sibus_init(PROGRAM_NAME)
 
 logger.info("####################################################")
 buscore = BusCore()
