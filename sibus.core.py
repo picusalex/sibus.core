@@ -5,7 +5,7 @@ import signal
 import sys
 import time
 
-from sibus_lib import BusCore
+from sibus_lib import BusCore, MessageObject
 from sibus_lib import sibus_init
 
 PROGRAM_NAME = "bus.core"
@@ -24,7 +24,8 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 
 try:
     while 1:
-        time.sleep(10)
+        time.sleep(30)
+        buscore.publish(MessageObject(topic="admin.heartbeat"))
 except KeyboardInterrupt:
     logger.info("Ctrl+C detected !")
 except Exception as e:
