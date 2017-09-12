@@ -4,7 +4,6 @@ pip install sibus_lib
 
 SERVICE="sibus.core.service"
 
-
 SERVICE_ORG="./$SERVICE"
 SERVICE_DST="/etc/init.d/$SERVICE"
 
