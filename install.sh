@@ -1,25 +1,43 @@
 #!/usr/bin/env bash
 
-pip install sibus_lib
+SERVICE="sibus.core"
 
-SERVICE="sibus.core.service"
+INSTALL_DIR=`pwd`
+SERVICE_PATH="$INSTALL_DIR/sibus.core.py"
+SYSTEMD_ORG="$INSTALL_DIR/systemd-config"
+SYSTEMD_TMP="$INSTALL_DIR/$SERVICE.service"
+SYSTEMD_DST="/etc/systemd/system/$SERVICE.service"
 
-SERVICE_ORG="./$SERVICE"
-SERVICE_DST="/etc/init.d/$SERVICE"
-
-if [ ! -e $SERVICE_ORG ]; then
-    echo "ERROR: file $SERVICE_ORG not found !"
+if [ ! -e $SERVICE_PATH ]; then
+    echo " !!! ERROR: file $SERVICE_PATH not found !!!"
+    echo " (script must be run from its own directory !)"
     exit 1
 fi
+sudo chmod +x $SERVICE_PATH
 
-echo "Installing service $SERVICE"
-chmod 0755 $SERVICE_ORG
-if [ -e $SERVICE_DST ]; then
-    sudo unlink $SERVICE_DST
+echo " # Checking service $SERVICE dependencies"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' python | grep "install ok installed")
+if [ "" == "$PKG_OK" ]; then
+  echo " + Installing python"
+  sudo apt-get update
+  sudo apt-get --force-yes --yes install python python-pip
 fi
-sudo ln -s -v $SERVICE_ORG $SERVICE_DST
 
-echo "Enable service $SERVICE at boot"
-sudo update-rc.d $SERVICE defaults
+sudo pip install --no-cache-dir sibus_lib
 
+echo " # Patching service $SERVICE systemd config file..."
+sed 's|<SCRIPT_PATH>|'$SERVICE_PATH'|g' $SYSTEMD_ORG > $SYSTEMD_TMP
+sed 's|<USER>|'$USER'|g' $SYSTEMD_TMP > $SYSTEMD_TMP
+cat $SYSTEMD_TMP
+
+echo " # Installing service $SERVICE"
+sudo ln -sfv $SYSTEMD_TMP $SYSTEMD_DST
+sudo systemctl daemon-reload
+
+echo " # Enable & start service $SERVICE at boot"
+sudo systemctl enable $SERVICE
+sudo systemctl start $SERVICE
+
+echo " # Service $SERVICE status"
+sudo systemctl status $SERVICE
 exit 0
