@@ -8,6 +8,8 @@ SYSTEMD_ORG="$INSTALL_DIR/systemd-config"
 SYSTEMD_TMP="$INSTALL_DIR/$SERVICE.service"
 SYSTEMD_DST="/etc/systemd/system/$SERVICE.service"
 
+git pull
+
 if [ ! -e $SERVICE_PATH ]; then
     echo " !!! ERROR: file $SERVICE_PATH not found !!!"
     echo " (script must be run from its own directory !)"
@@ -23,7 +25,7 @@ if [ "" == "$PKG_OK" ]; then
   sudo apt-get --force-yes --yes install python python-pip
 fi
 
-sudo pip install --no-cache-dir sibus_lib
+sudo pip install sibus_lib
 
 echo " # Patching service $SERVICE systemd config file..."
 sed 's|<SCRIPT_PATH>|'$SERVICE_PATH'|g' $SYSTEMD_ORG > $SYSTEMD_TMP
