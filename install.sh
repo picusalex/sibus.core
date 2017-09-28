@@ -4,10 +4,12 @@ SERVICE="sibus.core"
 
 INSTALL_DIR=`pwd`
 SERVICE_PATH="$INSTALL_DIR/sibus.core.py"
+SYSTEMD_SERVICE="$SERVICE.service"
 SYSTEMD_ORG="$INSTALL_DIR/systemd-config"
-SYSTEMD_TMP="$INSTALL_DIR/$SERVICE.service"
-SYSTEMD_DST="/etc/systemd/system/$SERVICE.service"
+SYSTEMD_TMP="$INSTALL_DIR/$SYSTEMD_SERVICE"
+SYSTEMD_DST="/etc/systemd/system/$SYSTEMD_SERVICE"
 
+echo " # Update folder from git repository"
 git pull
 
 if [ ! -e $SERVICE_PATH ]; then
@@ -38,9 +40,9 @@ sudo ln -sfv $SYSTEMD_TMP $SYSTEMD_DST
 sudo systemctl daemon-reload
 
 echo " # Enable & start service $SERVICE at boot"
-sudo systemctl enable $SERVICE
-sudo systemctl start $SERVICE
+sudo systemctl enable $SYSTEMD_SERVICE
+sudo systemctl start $SYSTEMD_SERVICE
 
 echo " # Service $SERVICE status"
-sudo systemctl status $SERVICE
+sudo systemctl status $SYSTEMD_SERVICE
 exit 0
