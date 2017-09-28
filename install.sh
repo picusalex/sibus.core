@@ -25,11 +25,12 @@ if [ "" == "$PKG_OK" ]; then
   sudo apt-get --force-yes --yes install python python-pip
 fi
 
-sudo pip install sibus_lib
+sudo pip install --upgrade sibus_lib
 
 echo " # Patching service $SERVICE systemd config file..."
-sed 's|<SCRIPT_PATH>|'$SERVICE_PATH'|g' $SYSTEMD_ORG > $SYSTEMD_TMP
-sed 's|<USER>|'$USER'|g' $SYSTEMD_TMP > $SYSTEMD_TMP
+sed 's|<SCRIPT_PATH>|'$SERVICE_PATH'|g' $SYSTEMD_ORG > "/tmp/tmp.systemd"
+sed 's|<USER>|'$USER'|g' "/tmp/tmp.systemd" > $SYSTEMD_TMP
+echo " = systemd config: "
 cat $SYSTEMD_TMP
 
 echo " # Installing service $SERVICE"
