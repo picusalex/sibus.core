@@ -1,10 +1,10 @@
 [Unit]
 Description=Sibus Core service
+After=syslog.target network.target
 
 [Service]
 Type=simple
 User=<USER>
-RuntimeDirectoryMode=770
 ExecStart=<SCRIPT_PATH>
 Restart=on-failure
 # Configures the time to wait before service is stopped forcefully.
