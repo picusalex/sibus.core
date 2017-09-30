@@ -10,7 +10,8 @@ SYSTEMD_TMP="$INSTALL_DIR/$SYSTEMD_SERVICE"
 SYSTEMD_DST="/lib/systemd/system/$SYSTEMD_SERVICE"
 
 echo " # Update folder from git repository"
-git pull
+git fetch origin master
+git reset --hard origin/master
 
 if [ ! -e $SERVICE_PATH ]; then
     echo " !!! ERROR: file $SERVICE_PATH not found !!!"
