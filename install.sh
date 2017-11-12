@@ -28,6 +28,7 @@ if [ "" == "$PKG_OK" ]; then
   sudo apt-get --force-yes --yes install python python-pip
 fi
 
+sudo pip install --upgrade pyzmq PyYaml marshmallow python-dateutil
 sudo pip install --upgrade sibus_lib
 
 echo " # Patching service $SERVICE systemd config file..."
